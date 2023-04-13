@@ -158,6 +158,11 @@ public class HDFSUtil {
     }
 
 
+    /**
+     * 获取FileSystem TODO 需要改造，只在启动时候获取（启动续约）
+     * @param nameNodeConf
+     * @return
+     */
     public static synchronized FileSystem getFileSystem(NameNodeConf nameNodeConf) {
         Configuration conf = new Configuration(false);
         conf.setBoolean("fs.hdfs.impl.disable.cache", true);
