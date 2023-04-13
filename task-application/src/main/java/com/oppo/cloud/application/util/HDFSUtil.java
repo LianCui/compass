@@ -147,9 +147,9 @@ public class HDFSUtil {
     }
 
     private static String checkLogPath(NameNodeConf nameNode, String logPath) {
-        if (logPath.split(":").length > 2) {
+        if (logPath.split(":").length != 3) {
             return logPath;
         }
-        return logPath.replace(nameNode.getNameservices(), nameNode.getNameservices() + ":" + nameNode.getPort());
+        return logPath.replace("log-hdfs:8020", nameNode.getNameservices() + ":" + nameNode.getPort());
     }
 }

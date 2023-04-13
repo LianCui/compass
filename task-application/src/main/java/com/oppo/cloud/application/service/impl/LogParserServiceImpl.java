@@ -224,7 +224,7 @@ public class LogParserServiceImpl implements LogParserService {
         }
 
         String logPath = String.join(",", logPathList);
-        // 保存 applicationId
+        // 保存 applicationId,TODO 从日志读取appid ?
         Object applicationId = data.get(APPLICATION_ID);
         if (applicationId instanceof List) {
             // 去重 applicationId
@@ -382,7 +382,7 @@ public class LogParserServiceImpl implements LogParserService {
                 if (lines.length > 0) {
                     countFileIfHasContent += 1;
                 }
-                // 提取关键字
+                // 提取关键字。TODO appid？
                 for (String line : lines) {
                     Matcher matcher = pattern.matcher(line);
                     if (matcher.matches()) {
