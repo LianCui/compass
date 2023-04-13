@@ -359,6 +359,7 @@ public class LogParserServiceImpl implements LogParserService {
                     }
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 log.error("filesPattern_error:" + e);
                 return RetCode.RET_OP_NEED_RETRY;
             }
