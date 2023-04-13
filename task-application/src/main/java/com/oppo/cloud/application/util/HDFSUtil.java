@@ -17,6 +17,7 @@
 package com.oppo.cloud.application.util;
 
 import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
@@ -36,6 +37,7 @@ import java.util.Objects;
 /**
  * Hdfs工具类
  */
+@Slf4j
 public class HDFSUtil {
 
     /**
@@ -131,6 +133,8 @@ public class HDFSUtil {
     public static List<String> filesPattern(NameNodeConf nameNodeConf,
                                             String filePath) throws URISyntaxException, IOException {
         filePath = checkLogPath(nameNodeConf, filePath);
+        log.info("------filePath" + filePath);
+        log.info("------nameservice" + nameNodeConf.getNameservices());
         FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf);
         FileStatus[] fileStatuses = fs.globStatus(new Path(filePath));
         List<String> result = new ArrayList<>();
@@ -147,9 +151,9 @@ public class HDFSUtil {
     }
 
     private static String checkLogPath(NameNodeConf nameNode, String logPath) {
-        if (logPath.split(":").length != 3) {
+        if (logPath.split(":").length > 2) {
             return logPath;
         }
-        return logPath.replace("log-hdfs:8020", nameNode.getNameservices() + ":" + nameNode.getPort());
+        return logPath.replace(nameNode.getNameservices(), nameNode.getNameservices() + ":" + nameNode.getPort());
     }
 }
