@@ -182,7 +182,7 @@ public class HDFSUtil {
 
             conf.set("dfs.ha.namenodes." + nameNodeConf.getNameservices(),
                     String.join(",", nameNodeConf.getNamenodes()));
-
+            conf.set("dfs.namenode.kerberos.principal.pattern", "hdfs/*@HAIER.COM");
 
             UserGroupInformation ugi = null;
 
