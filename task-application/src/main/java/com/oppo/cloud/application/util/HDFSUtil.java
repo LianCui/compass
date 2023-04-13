@@ -170,7 +170,8 @@ public class HDFSUtil {
         conf.set("dfs.nameservices", nameservices);
         conf.set("dfs.client.failover.proxy.provider." + nameservices,
                 "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider");
-
+        conf.set("hadoop.security.authorization","true");
+        conf.set("hadoop.security.authentication","kerberos");
         for (int i = 0; i < nameNodeConf.getNamenodes().length; i++) {
             String r = nameNodeConf.getNamenodes()[i];
             conf.set("dfs.namenode.rpc-address." + nameNodeConf.getNameservices() + "." + r,
