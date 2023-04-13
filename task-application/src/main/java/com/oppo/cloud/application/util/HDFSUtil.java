@@ -195,9 +195,9 @@ public class HDFSUtil {
                 }
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("IOException", e);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("InterruptedException", e);
         }
 
         return fs;
