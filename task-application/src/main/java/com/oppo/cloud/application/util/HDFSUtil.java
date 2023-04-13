@@ -41,7 +41,6 @@ import java.util.Objects;
 @Slf4j
 public class HDFSUtil {
 
-   private static FileSystem fs = null;
 
     /**
      * 获取Namnode, 根据配置matchPathKeys是否被包含在路径关键字中
@@ -136,8 +135,6 @@ public class HDFSUtil {
     public static List<String> filesPattern(NameNodeConf nameNodeConf,
                                             String filePath) throws URISyntaxException, IOException {
         filePath = checkLogPath(nameNodeConf, filePath);
-        log.info("------filePath：" + filePath);
-        log.info("------nameservice：" + nameNodeConf.getNameservices());
         FileSystem fs = HDFSUtil.getFileSystem(nameNodeConf);
         FileStatus[] fileStatuses = fs.globStatus(new Path(filePath));
         List<String> result = new ArrayList<>();
@@ -162,46 +159,44 @@ public class HDFSUtil {
 
 
     public static synchronized FileSystem getFileSystem(NameNodeConf nameNodeConf) {
-        if (fs == null) {
-            Configuration conf = new Configuration(false);
-            conf.setBoolean("fs.hdfs.impl.disable.cache", true);
-            conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
-            String nameservices = nameNodeConf.getNameservices();
+        Configuration conf = new Configuration(false);
+        conf.setBoolean("fs.hdfs.impl.disable.cache", true);
+        conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
+        String nameservices = nameNodeConf.getNameservices();
 
-            conf.set("fs.defaultFS", "hdfs://" + nameservices);
-            conf.set("dfs.nameservices", nameservices);
-            conf.set("dfs.client.failover.proxy.provider." + nameservices,
-                    "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider");
-            conf.set("hadoop.security.authorization", "true");
-            conf.set("hadoop.security.authentication", "kerberos");
-            for (int i = 0; i < nameNodeConf.getNamenodes().length; i++) {
-                String r = nameNodeConf.getNamenodes()[i];
-                conf.set("dfs.namenode.rpc-address." + nameNodeConf.getNameservices() + "." + r,
-                        nameNodeConf.getNamenodesAddr()[i] + ":" + nameNodeConf.getPort());
-            }
+        conf.set("fs.defaultFS", "hdfs://" + nameservices);
+        conf.set("dfs.nameservices", nameservices);
+        conf.set("dfs.client.failover.proxy.provider." + nameservices,
+                "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider");
+        conf.set("hadoop.security.authorization", "true");
+        conf.set("hadoop.security.authentication", "kerberos");
+        for (int i = 0; i < nameNodeConf.getNamenodes().length; i++) {
+            String r = nameNodeConf.getNamenodes()[i];
+            conf.set("dfs.namenode.rpc-address." + nameNodeConf.getNameservices() + "." + r,
+                    nameNodeConf.getNamenodesAddr()[i] + ":" + nameNodeConf.getPort());
+        }
 
-            conf.set("dfs.ha.namenodes." + nameNodeConf.getNameservices(),
-                    String.join(",", nameNodeConf.getNamenodes()));
-            conf.set("dfs.namenode.kerberos.principal.pattern", "hdfs/*@HAIER.COM");
+        conf.set("dfs.ha.namenodes." + nameNodeConf.getNameservices(),
+                String.join(",", nameNodeConf.getNamenodes()));
+        conf.set("dfs.namenode.kerberos.principal.pattern", "hdfs/*@HAIER.COM");
 
-            UserGroupInformation ugi = null;
-
-            try {
-                System.setProperty("java.security.krb5.conf", "/opt/compassCompile/keberosconf/krb5.conf");
-                UserGroupInformation.setConfiguration(conf);
-                UserGroupInformation.loginUserFromKeytab("admin", "/opt/compassCompile/keberosconf/admin.keytab");//kerberos 认证
-                ugi = UserGroupInformation.getLoginUser();
-                fs = ugi.doAs(new PrivilegedExceptionAction<FileSystem>() {
-                    @Override
-                    public FileSystem run() throws Exception {
-                        return FileSystem.get(conf);
-                    }
-                });
-            } catch (IOException e) {
-                log.error("IOException", e);
-            } catch (InterruptedException e) {
-                log.error("InterruptedException", e);
-            }
+        UserGroupInformation ugi = null;
+        FileSystem fs = null;
+        try {
+            System.setProperty("java.security.krb5.conf", "/opt/compassCompile/keberosconf/krb5.conf");
+            UserGroupInformation.setConfiguration(conf);
+            UserGroupInformation.loginUserFromKeytab("admin", "/opt/compassCompile/keberosconf/admin.keytab");//kerberos 认证
+            ugi = UserGroupInformation.getLoginUser();
+            fs = ugi.doAs(new PrivilegedExceptionAction<FileSystem>() {
+                @Override
+                public FileSystem run() throws Exception {
+                    return FileSystem.get(conf);
+                }
+            });
+        } catch (IOException e) {
+            log.error("IOException", e);
+        } catch (InterruptedException e) {
+            log.error("InterruptedException", e);
         }
         return fs;
     }
