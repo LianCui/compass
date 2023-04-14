@@ -429,30 +429,11 @@ public class LogParserServiceImpl implements LogParserService {
             for (LogPathJoin logPathJoin : rule.getLogPathJoins()) {
                 if (StringUtils.isBlank(logPathJoin.getColumn())) {
                     paths.add(logPathJoin.getData());
-                } else {
-                    log.info("logPathJoin:{}, data:{}", logPathJoin, data);
-                    Object columnDataObj = this.data.get(logPathJoin.getColumn());
-                    if (columnDataObj == null) {
-                        log.error("getColumnData value null, key=" + logPathJoin.getColumn() + ",data=" + this.data);
-                        return "";
-                    }
-                    String columnData = columnDataObj.toString();
-                    Pattern pattern = Pattern.compile(logPathJoin.getRegex());
-                    Matcher matcher = pattern.matcher(columnData);
-                    if (matcher.matches()) {
-                        String matchedData = matcher.group(logPathJoin.getName());
-                        matchedData = EscapePathUtil.escape(matchedData);
-                        if (StringUtils.isNotBlank(logPathJoin.getData())) {
-                            paths.add(logPathJoin.getData() + matchedData);
-                        } else {
-                            paths.add(matchedData);
-                        }
-                    } else {
-                        log.error("`{}` does not match `{}`", logPathJoin.getRegex(), columnData);
-                    }
                 }
             }
-
+            paths.add(data.get("flow_name").toString());
+            paths.add(data.get("task_name").toString());
+            paths.add(data.get("run_id") + "." + data.get("retry_times"));
             return String.join("/", paths);
         }
 
