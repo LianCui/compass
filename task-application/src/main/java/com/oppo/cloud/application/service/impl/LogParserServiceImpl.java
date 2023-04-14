@@ -427,9 +427,7 @@ public class LogParserServiceImpl implements LogParserService {
         public String getLogPath() {
             List<String> paths = new ArrayList<>();
             for (LogPathJoin logPathJoin : rule.getLogPathJoins()) {
-                if (StringUtils.isBlank(logPathJoin.getColumn())) {
-                    paths.add(logPathJoin.getData());
-                }
+                paths.add(logPathJoin.getData());
             }
             paths.add(data.get("flow_name").toString());
             paths.add(data.get("task_name").toString());
