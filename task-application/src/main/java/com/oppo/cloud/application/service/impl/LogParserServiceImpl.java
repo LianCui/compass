@@ -16,7 +16,6 @@
 
 package com.oppo.cloud.application.service.impl;
 
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.oppo.cloud.application.config.CustomConfig;
 import com.oppo.cloud.application.config.HadoopConfig;
@@ -24,11 +23,9 @@ import com.oppo.cloud.application.config.KafkaConfig;
 import com.oppo.cloud.application.constant.RetCode;
 import com.oppo.cloud.application.domain.LogPathJoin;
 import com.oppo.cloud.application.domain.ParseRet;
-import com.oppo.cloud.application.domain.RealtimeTaskInstance;
 import com.oppo.cloud.application.domain.Rule;
 import com.oppo.cloud.application.producer.MessageProducer;
 import com.oppo.cloud.application.service.LogParserService;
-import com.oppo.cloud.application.util.EscapePathUtil;
 import com.oppo.cloud.application.util.HDFSUtil;
 import com.oppo.cloud.application.util.StringUtil;
 import com.oppo.cloud.common.domain.cluster.hadoop.NameNodeConf;
@@ -37,7 +34,6 @@ import com.oppo.cloud.model.TaskApplication;
 import com.oppo.cloud.model.TaskInstance;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -431,7 +427,9 @@ public class LogParserServiceImpl implements LogParserService {
             }
             paths.add(data.get("flow_name").toString());
             paths.add(data.get("task_name").toString());
-            paths.add(data.get("execution_time") + "." + data.get("retry_times"));
+            paths.add(String.valueOf(data.get("run_id"))
+                    .replace(":", "_")
+                    .replace("+", "_") + "-" + data.get("retry_times"));
             return String.join("/", paths);
         }
 
