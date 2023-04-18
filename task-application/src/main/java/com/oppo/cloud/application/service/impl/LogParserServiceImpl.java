@@ -345,13 +345,8 @@ public class LogParserServiceImpl implements LogParserService {
             try {
                 for (int i = 0; i < 10; i++) {
                     filePaths = HDFSUtil.filesPattern(nameNodeConf, String.format("%s*", logPath));
-                    log.error("size-----------:" + filePaths.size());
-                    for(String s : filePaths) {
-                        log.error("path-----------:" + s);
-                    }
-
                     // flume文件未上传完成，有.tmp文件
-                    if (filePaths.size() != 0 && filePaths.get(filePaths.size() - 1).endsWith(".tmp")) {
+                    if (filePaths.size() == 0 || (filePaths.size() != 0 && filePaths.get(filePaths.size() - 1).endsWith(".tmp"))) {
                         log.warn("tmp file retry times:{}, {}", i, filePaths.get(filePaths.size() - 1));
                         // 等待完成
                         TimeUnit.SECONDS.sleep(5);
