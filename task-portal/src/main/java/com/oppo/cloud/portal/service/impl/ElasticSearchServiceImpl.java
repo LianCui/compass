@@ -104,7 +104,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         Long endTime = System.currentTimeMillis();
         log.info("indexes:{}, duration:{}, condition:{}", indexes, (endTime - startTime) / 1000, builder.toString());
         Aggregations aggregations = searchResponse.getAggregations();
-        ParsedDateHistogram terms = aggregations.get("date");
+        ParsedDateHistogram terms = aggregations.get("date_histogram#date");
         List<? extends Histogram.Bucket> buckets = terms.getBuckets();
         for (Histogram.Bucket bucket : buckets) {
             IndicatorData indicatorData = new IndicatorData();
