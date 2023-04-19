@@ -16,8 +16,6 @@
 
 package com.oppo.cloud.detect.service.impl;
 
-import com.oppo.cloud.common.util.DateUtil;
-import com.oppo.cloud.detect.mapper.TaskInstanceExtendMapper;
 import com.oppo.cloud.detect.service.SchedulerLogService;
 import com.oppo.cloud.mapper.TaskApplicationMapper;
 import com.oppo.cloud.model.TaskApplication;
@@ -25,10 +23,8 @@ import com.oppo.cloud.model.TaskApplicationExample;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -51,29 +47,22 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
         taskApplicationExample.createCriteria()
                 .andProjectNameEqualTo(projectName)
                 .andFlowNameEqualTo(flowName)
-                .andTaskNameEqualTo(taskName);
-
-        log.error("eeeeeeeeeeeeeeeee"+projectName+flowName+taskName+"---");
-        List<TaskApplication> taskApplicationList22=
+                .andTaskNameEqualTo(taskName)
+                .andExecuteTimeEqualTo(executionDate);
+        List<TaskApplication> taskApplicationList =
                 taskApplicationMapper.selectByExampleWithBLOBs(taskApplicationExample);
 
-        log.error("eeeeeeeeeeeeeeeee");
-        if(taskApplicationList22==null||taskApplicationList22.size()==0){
-            log.error("nulllllllllllllllllllll");
-        }
-        for(TaskApplication ta :taskApplicationList22 ){
-            log.error(ta.toString());
-        }
-
-
-
-        List<TaskApplication> taskApplicationList= new ArrayList<>();
-        for(TaskApplication ta :taskApplicationList22 ){
-            if(ta.getExecuteTime().getTime()==executionDate.getTime()){
-                taskApplicationList.add(ta);
+        if (taskApplicationList == null || taskApplicationList.size() == 0) {
+            for (int i = 0; i < 30; i++) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                taskApplicationList = taskApplicationMapper.selectByExampleWithBLOBs(taskApplicationExample);
+                if (taskApplicationList.size() > 0) break;
             }
         }
-
 
         if (taskApplicationList.size() != 0) {
             TaskApplication taskApplication = null;
