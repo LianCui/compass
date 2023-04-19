@@ -143,10 +143,11 @@ public class HDFSUtil {
     }
 
     public static String checkLogPath(NameNodeConf nameNode, String logPath) {
-        if (logPath.split(":").length > 2) {
-            return logPath;
-        }
-        return logPath.replace(nameNode.getNameservices(), nameNode.getNameservices() + ":" + nameNode.getPort());
+//        if (logPath.split(":").length > 2) {
+//            return logPath;
+//        }
+//        return logPath.replace(nameNode.getNameservices(), nameNode.getNameservices() + ":" + nameNode.getPort());
+        return logPath;
     }
 
     public static synchronized FileSystem getFileSystem(NameNodeConf nameNodeConf) {
