@@ -51,7 +51,7 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
                 .andProjectNameEqualTo(projectName)
                 .andFlowNameEqualTo(flowName)
                 .andTaskNameEqualTo(taskName)
-                .andExecuteTimeEqualToStr(DateUtil.timestampToUTCDate2(executionDate.getTime()));
+                .andExecuteTimeEqualTo(executionDate);
         List<TaskApplication> taskApplicationList =
                 taskApplicationMapper.selectByExampleWithBLOBs(taskApplicationExample);
         if (taskApplicationList.size() != 0) {
@@ -72,7 +72,7 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
         }
         log.error(
                 "can not find scheduler log from task_application,taskName:{},flowName:{}, executionDate:{}",
-                taskName, flowName, DateUtil.timestampToUTCDate2(executionDate.getTime()));
+                taskName, flowName, executionDate);
         return null;
     }
 }
