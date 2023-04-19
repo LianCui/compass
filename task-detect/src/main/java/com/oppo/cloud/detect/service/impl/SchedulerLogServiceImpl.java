@@ -51,7 +51,7 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
                 .andProjectNameEqualTo(projectName)
                 .andFlowNameEqualTo(flowName)
                 .andTaskNameEqualTo(taskName)
-                .andExecuteTimeEqualToStr(DateUtil.timestampToUTCDate(executionDate.getTime()));
+                .andExecuteTimeEqualToStr(DateUtil.timestampToUTCDate2(executionDate.getTime()));
         List<TaskApplication> taskApplicationList =
                 taskApplicationMapper.selectByExampleWithBLOBs(taskApplicationExample);
         if (taskApplicationList.size() != 0) {

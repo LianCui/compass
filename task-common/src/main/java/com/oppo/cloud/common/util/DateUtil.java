@@ -88,6 +88,19 @@ public class DateUtil {
         return sdf.format(source);
     }
 
+
+    /**
+     * 本地时间戳转UTC时间
+     */
+    public static String timestampToUTCDate2(long time) {
+        Calendar ca = Calendar.getInstance();
+        ca.setTimeInMillis(time);
+        Date source = ca.getTime();
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.format(source);
+    }
+
     /**
      * 本地时间戳转UTC时间格式
      */
