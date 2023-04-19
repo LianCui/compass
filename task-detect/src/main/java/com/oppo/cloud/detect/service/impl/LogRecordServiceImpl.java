@@ -50,6 +50,12 @@ public class LogRecordServiceImpl implements LogRecordService {
             List<String> logPaths = schedulerLogService.getSchedulerLog(detectJobAnalysis.getProjectName(),
                     detectJobAnalysis.getFlowName(), detectJobAnalysis.getTaskName(),
                     detectJobAnalysis.getExecutionDate(), i);
+            log.error("-------------------");
+            log.error(detectJobAnalysis.toString());
+            for(int j=0;j<logPaths.size();j++){
+                log.error(logPaths.get(j));
+            }
+            log.error(detectJobAnalysis.toString());
             if (logPaths != null && logPaths.size() != 0) {
                 App app = new App();
                 app.formatSchedulerLog(logPaths, i);
