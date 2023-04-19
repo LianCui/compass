@@ -52,8 +52,20 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
                 .andProjectNameEqualTo(projectName)
                 .andFlowNameEqualTo(flowName)
                 .andTaskNameEqualTo(taskName);
+
+        log.error("eeeeeeeeeeeeeeeee"+projectName+flowName+taskName+"---");
         List<TaskApplication> taskApplicationList22=
                 taskApplicationMapper.selectByExampleWithBLOBs(taskApplicationExample);
+
+        log.error("eeeeeeeeeeeeeeeee");
+        if(taskApplicationList22==null||taskApplicationList22.size()==0){
+            log.error("nulllllllllllllllllllll");
+        }
+        for(TaskApplication ta :taskApplicationList22 ){
+            log.error(ta.toString());
+        }
+
+
 
         List<TaskApplication> taskApplicationList= new ArrayList<>();
         for(TaskApplication ta :taskApplicationList22 ){
