@@ -100,6 +100,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         SearchRequest searchRequest = new SearchRequest().indices(indexes).source(builder);
         Long startTime = System.currentTimeMillis();
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        log.info("-----------------"+searchResponse.toString());
         Long endTime = System.currentTimeMillis();
         log.info("indexes:{}, duration:{}, condition:{}", indexes, (endTime - startTime) / 1000, builder.toString());
         Aggregations aggregations = searchResponse.getAggregations();
