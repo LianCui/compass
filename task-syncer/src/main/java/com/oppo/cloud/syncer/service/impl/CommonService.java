@@ -65,7 +65,7 @@ abstract public class CommonService {
                     query = StringUtil.replaceParams(query, data);
                     Map<String, Object> result = null;
                     // 可能延迟
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < 100; i++) {
                         try {
                             result = jdbcTemplate.queryForMap(query);
                             break;
