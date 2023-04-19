@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -50,10 +51,18 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
         taskApplicationExample.createCriteria()
                 .andProjectNameEqualTo(projectName)
                 .andFlowNameEqualTo(flowName)
-                .andTaskNameEqualTo(taskName)
-                .andExecuteTimeEqualTo(executionDate);
-        List<TaskApplication> taskApplicationList =
+                .andTaskNameEqualTo(taskName);
+        List<TaskApplication> taskApplicationList22=
                 taskApplicationMapper.selectByExampleWithBLOBs(taskApplicationExample);
+
+        List<TaskApplication> taskApplicationList= new ArrayList<>();
+        for(TaskApplication ta :taskApplicationList22 ){
+            if(ta.getExecuteTime().getTime()==executionDate.getTime()){
+                taskApplicationList.add(ta);
+            }
+        }
+
+
         if (taskApplicationList.size() != 0) {
             TaskApplication taskApplication = null;
             for (TaskApplication temp : taskApplicationList) {
