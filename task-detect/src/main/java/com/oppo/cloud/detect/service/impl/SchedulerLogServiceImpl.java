@@ -72,7 +72,7 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
         }
         log.error(
                 "can not find scheduler log from task_application,taskName:{},flowName:{}, executionDate:{}",
-                taskName, flowName, executionDate);
+                taskName, flowName, DateUtil.timestampToUTCDate2(executionDate.getTime()));
         return null;
     }
 }
