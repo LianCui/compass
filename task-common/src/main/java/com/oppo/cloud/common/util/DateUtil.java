@@ -88,15 +88,6 @@ public class DateUtil {
         return sdf.format(source);
     }
 
-
-    /**
-     * 本地时间戳转UTC时间
-     */
-    public static String timestampToUTCDate2(long time) {
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(time);
-    }
-
     /**
      * 本地时间戳转UTC时间格式
      */
