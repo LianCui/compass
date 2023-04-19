@@ -56,8 +56,8 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
             for (int i = 0; i < 30; i++) {
                 try {
                     Thread.sleep(1000);
+                    log.info("waiting for retry.");
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
                 taskApplicationList = taskApplicationMapper.selectByExampleWithBLOBs(taskApplicationExample);
                 if (taskApplicationList.size() > 0) break;

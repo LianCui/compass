@@ -70,9 +70,10 @@ abstract public class CommonService {
                             result = jdbcTemplate.queryForMap(query);
                             break;
                         } catch (Exception e) {
-                            log.error("table: {},queryForMap: {},", mapping.getTargetTable(), query, e);
+                            log.error("table: {},queryForMap: {},", mapping.getTargetTable(), query, e.getMessage());
                             try {
                                 TimeUnit.MILLISECONDS.sleep(300);
+                                log.error("waiting for retry.");
                             } catch (Exception ee) {
 
                             }
