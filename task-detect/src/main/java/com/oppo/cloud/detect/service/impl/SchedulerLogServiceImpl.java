@@ -16,6 +16,7 @@
 
 package com.oppo.cloud.detect.service.impl;
 
+import com.oppo.cloud.common.util.DateUtil;
 import com.oppo.cloud.detect.mapper.TaskInstanceExtendMapper;
 import com.oppo.cloud.detect.service.SchedulerLogService;
 import com.oppo.cloud.mapper.TaskApplicationMapper;
@@ -50,7 +51,7 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
                 .andProjectNameEqualTo(projectName)
                 .andFlowNameEqualTo(flowName)
                 .andTaskNameEqualTo(taskName)
-                .andExecuteTimeEqualTo(executionDate);
+                .andExecuteTimeEqualToStr(DateUtil.timestampToUTCDate(executionDate.getTime()));
         List<TaskApplication> taskApplicationList =
                 taskApplicationMapper.selectByExampleWithBLOBs(taskApplicationExample);
         if (taskApplicationList.size() != 0) {

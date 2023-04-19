@@ -477,6 +477,10 @@ public class TaskApplicationExample {
             addCriterion("execute_time =", value, "executeTime");
             return (Criteria) this;
         }
+        public Criteria andExecuteTimeEqualToStr(String value) {
+            addCriterion("execute_time =", value, "executeTime");
+            return (Criteria) this;
+        }
 
         public Criteria andExecuteTimeNotEqualTo(Date value) {
             addCriterion("execute_time <>", value, "executeTime");
