@@ -81,16 +81,16 @@ export SPRING_DATASOURCE_URL="jdbc:mysql://${COMPASS_MYSQL_ADDRESS}/${COMPASS_MY
 export SPRING_DATASOURCE_USERNAME=""
 export SPRING_DATASOURCE_PASSWORD=""
 
-# Kafka
+# Kafka (默认版本: 3.4.0)
 export SPRING_KAFKA_BOOTSTRAPSERVERS="ip1:port,ip2:port"
 
-# Redis
+# Redis (cluster 模式)
 export SPRING_REDIS_CLUSTER_NODES="ip1:port,ip2:port"
 
-# Zookeeper
+# Zookeeper (默认版本: 3.7.1)
 export SPRING_ZOOKEEPER_NODES="ip1:port,ip2:port"
 
-# Elasticsearch
+# Elasticsearch (默认版本: 7.17.9)
 export SPRING_ELASTICSEARCH_NODES="ip1:port,ip2:port"
 
 # task-canal模块配置
@@ -440,7 +440,7 @@ custom:
       logPathJoins: 
         # end_time: 2023-02-18 01:43:11
         # log_path: ../logs/6354680786144_1/3/4.log
-        - { "column": "", "data": "hdfs://log-hdfs:8020/flume/dolphinscheduler" } # 相当于根目录，常量
+        - { "column": "", "data": "hdfs://log-hdfs:8020/flume/dolphinscheduler" } # 配置存储调度日志的hdfs根目录，log-hdfs即nameservice需要根据实际集群修改
         - { "column": "end_time", "regex": "^.*(?<date>\\d{4}-\\d{2}-\\d{2}).+$", "name": "date" }
         - { "column": "log_path", "regex": "^.*logs/(?<logpath>.*)$", "name": "logpath" }
       extractLog: # 根据组装的日志路径解析日志
