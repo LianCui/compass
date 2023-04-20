@@ -746,12 +746,15 @@ public class TaskAppServiceImpl implements TaskAppService {
      * 未检测也未提交检测
      */
     private DiagnoseResult sponsorDiagnose(String applicationId) throws Exception {
+        log.info("---------"+applicationId);
         TaskApp taskApp = this.buildTaskApp(applicationId);
         JobInstance jobInstance;
         if (!taskApp.getApplicationType().equals(ApplicationType.SPARK.getValue())) {
             throw new Exception(String.format("暂不支持%s类型的任务", taskApp.getApplicationType()));
         }
         JobAnalysis jobAnalysis = new JobAnalysis();
+        //? null?
+        log.info("---------"+taskApp.toString());
         jobInstance = jobService.getJobInstance(taskApp.getProjectName(),
                 taskApp.getFlowName(), taskApp.getTaskName(), taskApp.getExecutionDate());
         BeanUtils.copyProperties(jobInstance, jobAnalysis);
@@ -816,6 +819,7 @@ public class TaskAppServiceImpl implements TaskAppService {
         }
         taskApplication = taskApplicationList.get(0);
         HashMap<String, Object> termQueryYarn = new HashMap<>();
+        // TODO id.keyword -> ID
         termQueryYarn.put("id.keyword", taskApplication.getApplicationId());
         List<YarnApp> yarnAppList = elasticSearchService.find(YarnApp.class, termQueryYarn, yarnAppIndex + "-*");
         if (yarnAppList.size() == 0) {
@@ -824,6 +828,7 @@ public class TaskAppServiceImpl implements TaskAppService {
         }
         yarnApp = yarnAppList.get(0);
         HashMap<String, Object> termQuerySpark = new HashMap<>();
+        //TODO
         termQuerySpark.put("appId.keyword", taskApplication.getApplicationId());
         List<SparkApp> sparkAppList = elasticSearchService.find(SparkApp.class, termQuerySpark, sparkAppIndex + "-*");
         if (sparkAppList.size() == 0) {
