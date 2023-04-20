@@ -70,17 +70,17 @@ abstract public class CommonService {
                             result = jdbcTemplate.queryForMap(query);
                             break;
                         } catch (Exception e) {
-                            log.error("table: {},queryForMap: {},", mapping.getTargetTable(), query, e.getMessage());
+                            log.info("table: {},queryForMap: {},", mapping.getTargetTable(), query, e.getMessage());
                             try {
                                 TimeUnit.MILLISECONDS.sleep(300);
-                                log.error("waiting for retry.");
+                                log.info("waiting for retry.");
                             } catch (Exception ee) {
 
                             }
                         }
                     }
                     if (result == null) {
-                        log.info("query: {}, result is null!", query);
+                        log.error("query: {}, result is null!", query);
                         continue;
                     }
                     log.info("table: {},query:{}, result: {}", mapping.getTargetTable(), query, result);
