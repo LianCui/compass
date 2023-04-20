@@ -94,10 +94,11 @@ public abstract class RunTimeBaseService<T extends IsAbnormal> implements Genera
             }
 
         } catch (Exception e) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            e.printStackTrace(new PrintStream(baos));
-            log.error(baos.toString());
-            error = baos.toString();
+            e.printStackTrace();
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            e.printStackTrace(new PrintStream(baos));
+//            log.error(baos.toString());
+//            error = baos.toString();
         }
         // 生成建议
         return this.generateItem(data, error, conclusion);
