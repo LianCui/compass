@@ -31,8 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
 
@@ -94,11 +92,7 @@ public abstract class RunTimeBaseService<T extends IsAbnormal> implements Genera
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//            e.printStackTrace(new PrintStream(baos));
-//            log.error(baos.toString());
-//            error = baos.toString();
+            log.error("error:" + e);
         }
         // 生成建议
         return this.generateItem(data, error, conclusion);
