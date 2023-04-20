@@ -81,8 +81,6 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         Long endTime = System.currentTimeMillis();
         log.info("indexes:{}, duration:{} ,condition:{}", indexes, (endTime - startTime) / 1000, builder.toString());
-        log.info("wwwwwwwwwwwwwww"+searchResponse.toString());
-        log.info("wwwwwwwwwwwwwww"+searchResponse.getHits().toString());
         return searchResponse.getHits();
     }
 
@@ -181,7 +179,6 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     @Override
     public <T> List<T> find(Class<T> itemType, Map<String, Object> termQueryConditions,
                             String... indexes) throws Exception {
-        log.error("_ddddddddddd"+termQueryConditions);
         SearchSourceBuilder searchSourceBuilder = this.genSearchBuilder(termQueryConditions, null, null, null);
         return this.find(itemType, searchSourceBuilder, indexes);
     }
