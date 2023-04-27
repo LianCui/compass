@@ -59,6 +59,7 @@ public class YarnMetaScheduler {
         }
         try {
             log.info("get {}", lock.getParticipantNodes());
+            // TODO
             yarn.syncer();
         } finally {
             log.info("release {}", lock.getParticipantNodes());

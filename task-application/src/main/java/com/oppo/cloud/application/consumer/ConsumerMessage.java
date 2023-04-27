@@ -71,6 +71,7 @@ public class ConsumerMessage {
         Map<String, String> rawData =
                 JSON.parseObject(tableMessage.getRawData(), new TypeReference<Map<String, String>>() {});
         try {
+            // TODO handle
             ParseRet parseRet = logParserService.handle(taskInstance, rawData);
             // 加入延迟重试
             if (parseRet.getRetCode() == RetCode.RET_OP_NEED_RETRY) {

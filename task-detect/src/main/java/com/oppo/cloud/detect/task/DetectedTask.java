@@ -62,6 +62,7 @@ public class DetectedTask {
     @Autowired
     private BlocklistService blocklistService;
 
+    // TODO 消费 topic：task-instance
     @KafkaListener(topics = "${custom.kafka.consumer.topic-name}", groupId = "${custom.kafka.consumer.group-id}", autoStartup = "${custom.kafka.consumer.auto.start}")
     public void consumerTask(@Payload List<String> tableChangeMessages, Acknowledgment ack) {
         for (String message : tableChangeMessages) {
@@ -83,6 +84,7 @@ public class DetectedTask {
                             tableMessage.getBody());
                     continue;
                 }
+                // 判断任务是否结束
                 if (judgeTaskFinished(taskInstance)) {
                     detectExecutorPool.execute(() -> detectTask(taskInstance));
                 }
@@ -156,6 +158,7 @@ public class DetectedTask {
                     taskInstance.getFlowName(), taskInstance.getTaskName(), taskInstance.getExecutionTime());
         }
         try {
+            // map
             BeanUtils.copyProperties(taskInstanceSum, jobAnalysis);
         } catch (Exception e) {
             log.error("taskInstanceNum:{}, taskInstance:{}, exception:{}", taskInstanceSum, taskInstance, e.getMessage());
@@ -169,6 +172,8 @@ public class DetectedTask {
         // 异常任务检测
         for (DetectService detectService : abnormalDetects) {
             try {
+                // TODO 异常任务检测 com.oppo.cloud.detect.detector*
+                //  更新 jobAnalysis.categories 字段
                 detectService.detect(jobAnalysis);
             } catch (Exception e) {
                 log.error("detect task failed: ", e);
@@ -176,6 +181,7 @@ public class DetectedTask {
         }
 
         try {
+            // 判断是否有异常
             if (jobAnalysis.getCategories().size() == 0) {
                 // 正常作业任务处理
                 abnormalDetects.get(0).handleNormalJob(jobAnalysis);

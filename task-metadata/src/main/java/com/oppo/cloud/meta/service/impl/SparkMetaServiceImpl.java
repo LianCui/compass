@@ -101,6 +101,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
             int finalI = i;
             array[i] = CompletableFuture.supplyAsync(() -> {
                 try {
+                    // TODO
                     pull(clusters.get(finalI));
                 } catch (Exception e) {
                     log.error(e.getMessage());
@@ -122,6 +123,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
         log.info("start to pull spark tasks:{}", shs);
         String eventLogDirectory;
         try {
+            // TODO 获取SparkHistoryServer Event log directory: hdfs://ip:port/spark/, 缓存到redis
             eventLogDirectory = getEventLogDirectory(shs);
         } catch (Exception e) {
             log.error("sparkMetaErr:eventLogDirectory:{},{}", shs, e.getMessage());
@@ -132,6 +134,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
             return;
         }
 
+        // TODO spark任务获取
         List<SparkApplication> apps = sparkRequest(shs);
         if (apps == null || apps.size() == 0) {
             log.error("sparkMetaErr:appsNull:{}", shs);
@@ -148,7 +151,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
             Attempt attempt = info.getAttempts().get(0);
             try {
                 SparkApp sparkApp = new SparkApp(info.getId(), eventLogDirectory, attempt, shs);
-                log.info("sparkApp:{}", sparkApp);
+                log.debug("sparkApp:{}", sparkApp);
                 String id = sparkApp.getSparkHistoryServer() + "_" + sparkApp.getAppId();
                 sparkAppMap.put(id, sparkApp.getSparkAppMap());
             } catch (Exception e) {
@@ -158,6 +161,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
 
         BulkResponse response;
         try {
+            // TODO SAVE TO ES ,通过 Id 更新或插入
             response = BulkApi.bulkByIds(client, sparkAppPrefix + DateUtil.getDay(0), sparkAppMap);
         } catch (IOException e) {
             log.error("bulkSparkAppsErr:{}", e.getMessage());
@@ -226,6 +230,7 @@ public class SparkMetaServiceImpl implements ITaskSyncerMetaService {
                 String path = m.group("hdfs");
                 if (StringUtils.isNotBlank(path)) {
                     log.info("cacheEventLogDirectory:{},{}", key, path);
+                    // TODO 缓存 REDIS
                     redisService.set(key, path, Constant.DAY_SECONDS);
                 }
                 return path;

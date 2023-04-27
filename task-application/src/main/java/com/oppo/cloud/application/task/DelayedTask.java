@@ -117,6 +117,7 @@ public class DelayedTask implements CommandLineRunner {
         }
         Map<String, String> rawData = delayedTaskInfo.getRawData();
         try {
+            // TODO 重试
             ParseRet parseRet = logParserService.handle(instance, rawData);
             // 重试不成功
             if (parseRet.getRetCode() != RetCode.RET_OK) {

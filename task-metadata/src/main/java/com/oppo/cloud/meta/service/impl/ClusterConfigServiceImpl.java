@@ -124,6 +124,7 @@ public class ClusterConfigServiceImpl implements IClusterConfigService {
 
     /**
      * 更新集群信息
+     * 读取集群配置文件，将配置信息更新到redis
      */
     @Override
     public void updateClusterConfig() {

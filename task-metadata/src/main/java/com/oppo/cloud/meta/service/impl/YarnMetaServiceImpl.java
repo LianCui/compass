@@ -96,6 +96,7 @@ public class YarnMetaServiceImpl implements ITaskSyncerMetaService {
         for (Map.Entry<String, String> yarnCluster : yarnClusters.entrySet()) {
             array[i] = CompletableFuture.supplyAsync(() -> {
                 try {
+                    // TODO
                     pull(yarnCluster.getKey(), yarnCluster.getValue());
                 } catch (Exception e) {
                     log.error(e.getMessage());
@@ -117,6 +118,7 @@ public class YarnMetaServiceImpl implements ITaskSyncerMetaService {
      */
     public void pull(String ip, String clusterName) {
         log.info("start to pull yarn tasks:{}", ip);
+        // TODO 获取 YARN APP
         List<YarnApp> apps = yarnRequest(ip);
         if (apps == null) {
             log.error("yarnMetaErr:appsNull:{}", ip);
@@ -134,6 +136,7 @@ public class YarnMetaServiceImpl implements ITaskSyncerMetaService {
         }
         BulkResponse response;
         try {
+            // TODO SAVE TO ES ，通过id判断更新还是插入
             response = BulkApi.bulkByIds(client, yarnAppPrefix + DateUtil.getDay(0), yarnAppMap);
         } catch (IOException e) {
             log.error("bulkYarnAppsErr:{}", e.getMessage());

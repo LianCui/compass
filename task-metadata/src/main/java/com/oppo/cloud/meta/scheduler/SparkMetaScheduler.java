@@ -57,6 +57,7 @@ public class SparkMetaScheduler {
         }
         try {
             log.info("get {}", lock.getParticipantNodes());
+            // TODO
             spark.syncer();
         } finally {
             log.info("release {}", lock.getParticipantNodes());

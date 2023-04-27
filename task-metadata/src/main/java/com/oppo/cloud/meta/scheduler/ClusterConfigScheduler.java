@@ -66,6 +66,7 @@ public class ClusterConfigScheduler {
         }
         try {
             log.info("get {}", lock.getParticipantNodes());
+            // TODO 更新集群配置信息
             iClusterConfigService.updateClusterConfig();
         } finally {
             log.info("release {}", lock.getParticipantNodes());

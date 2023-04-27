@@ -174,6 +174,7 @@ public class LogParserServiceImpl implements LogParserService {
                 args = new Object[]{taskInstance.getFlowName(), taskInstance.getTaskName(),
                         taskInstance.getExecutionTime()};
             }
+            // TODO compass db
             data = jdbcTemplate.queryForMap(sql, args);
         } catch (Exception e) {
             log.error("exception:" + e + ", sql=" + sql + ", args=" + Arrays.toString(args) + ",taskInstance="
@@ -198,6 +199,7 @@ public class LogParserServiceImpl implements LogParserService {
         for (Rule rule : customConfig.getRules()) {
             LogParser logParser = new LogParser(data, rule, count, taskInstance.getTaskType());
             try {
+                // TODO 日志解析
                 RetCode retCode = logParser.extract();
                 parseRet = new ParseRet(retCode, taskInstance);
                 data = logParser.getData();
@@ -220,7 +222,7 @@ public class LogParserServiceImpl implements LogParserService {
         }
 
         String logPath = String.join(",", logPathList);
-        // 保存 applicationId,TODO 从日志读取appid ?
+        // TODO 保存 applicationId
         Object applicationId = data.get(APPLICATION_ID);
         if (applicationId instanceof List) {
             // 去重 applicationId
@@ -314,6 +316,7 @@ public class LogParserServiceImpl implements LogParserService {
          * 日志提取
          */
         public RetCode extract() throws Exception {
+            // 日志依赖查询，没啥用？
             if (!StringUtils.isBlank(rule.getLogPathDep().getQuery())) {
                 String sql = StringUtil.replaceParams(rule.getLogPathDep().getQuery(), data);
                 log.info("extract SQL:{}, data:{}", sql, data);
@@ -330,6 +333,7 @@ public class LogParserServiceImpl implements LogParserService {
                 }
             }
 
+            // TODO 获取 app 的日志路径
             String logPath = this.getLogPath();
             if (StringUtils.isBlank(logPath)) {
                 return RetCode.RET_DATA_NOT_EXIST;
@@ -344,6 +348,7 @@ public class LogParserServiceImpl implements LogParserService {
             List<String> filePaths = null;
             try {
                 for (int i = 0; i < 10; i++) {
+                    // TODO 获取日志路径下的日志
                     filePaths = HDFSUtil.filesPattern(nameNodeConf, String.format("%s*", logPath));
                     // flume文件未上传完成，有.tmp文件
                     if (filePaths.size() == 0 || (filePaths.size() != 0 && filePaths.get(filePaths.size() - 1).endsWith(".tmp"))) {
@@ -372,6 +377,7 @@ public class LogParserServiceImpl implements LogParserService {
             int countFileIfHasContent = 0;
             Pattern pattern = Pattern.compile(rule.getExtractLog().getRegex());
 
+            // TODO 迭代，解析日志
             for (String filePath : filePaths) {
                 String[] lines = HDFSUtil.readLines(nameNodeConf, filePath);
                 log.info(filePath + " has no log content");

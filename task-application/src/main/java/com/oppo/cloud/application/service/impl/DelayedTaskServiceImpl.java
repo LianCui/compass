@@ -45,6 +45,7 @@ public class DelayedTaskServiceImpl implements DelayedTaskService {
     @Value("${custom.delayedTask.delayedSeconds}")
     private Integer delayedSeconds;
 
+    // scripts/delayedTask.lua
     @Autowired
     private RedisScript<Object> delayedTaskScript;
 
@@ -56,6 +57,7 @@ public class DelayedTaskServiceImpl implements DelayedTaskService {
      */
     @Override
     public void pushDelayedQueue(DelayedTaskInfo delayedTaskInfo) {
+        // push "{lua}:task:application"
         redisService.zSetAdd(queue, JSON.toJSONString(delayedTaskInfo), System.currentTimeMillis() + delayedSeconds * 1000);
         log.info("pushDelayedQueue:{},{}", queue, JSON.toJSONString(delayedTaskInfo));
     }

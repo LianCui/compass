@@ -88,6 +88,7 @@ public class InitService implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        // TODO step1： 查询是否有进程持有锁，控制并发(只在系统第一次强启动的时候执行)
         List<TaskSyncerInit> taskSyncerInits = taskSyncerInitMapper.selectByExample(new TaskSyncerInitExample());
         if (taskSyncerInits != null && taskSyncerInits.size() > 0) {
             log.info("task-syncer has initialized ...");
@@ -97,6 +98,7 @@ public class InitService implements CommandLineRunner {
         // 可能有并发问题, 异常退出
         try {
             TaskSyncerInit taskSyncerInit = new TaskSyncerInit();
+            // 尝试获取锁
             taskSyncerInit.setIsInit(1);
             taskSyncerInitMapper.insert(taskSyncerInit);
         } catch (Exception e) {
@@ -106,6 +108,7 @@ public class InitService implements CommandLineRunner {
 
         Mapping mapping = null;
         // target table = user
+        // TODO step2： 从 application-airflow.yml 加载表映射信息，返回user表的映射信息
         mapping = this.getTableMapping("user");
         if (mapping == null) {
             log.error("can not find `user` table mapping");
@@ -181,6 +184,7 @@ public class InitService implements CommandLineRunner {
 
         while (true) {
             String query = buildQuery(mapping.getTable(), page, pageSize);
+            // TODO 从源数据库获取记录
             List<Map<String, Object>> queryDatas = sourceJdbcTemplate.queryForList(query);
             if (queryDatas.size() == 0) {
                 break;
@@ -221,7 +225,7 @@ public class InitService implements CommandLineRunner {
                         }
                     }
                 }
-                // 保存数据
+                // TODO 保存到目标数据库
                 dataStore.call(data);
             }
 
